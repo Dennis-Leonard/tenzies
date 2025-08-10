@@ -63,8 +63,8 @@ button {
   border-radius: 10px;
   border: none;
   background-color: white;
-  font-size: 1.75rem;
   font-weight: bold;
+  padding: 0px;
 }
 
 button.roll-dice {
@@ -76,7 +76,6 @@ button.roll-dice {
   border-radius: 6px;
   background-color: #5035ff;
   color: white;
-  font-size: 1.2rem;
 }
 
 .sr-only {
@@ -92,6 +91,23 @@ button.roll-dice {
 }
 
 .dice-container button.held {
-  background-color: #59e391;
+  background-color: lightgrey;
+  border: 1px inset black;
+}
+
+.pips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+  height: 50px;
+  width: 50px;
+  padding: 4px;
+}
+
+.circle {
+  border: 0.1875em solid #0f1c3f;
+  border-radius: 50%;
+  height: 0.8em;
+  width: 0.8em;
 }
 

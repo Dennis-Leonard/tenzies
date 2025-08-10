@@ -3,19 +3,20 @@ import { nanoid } from 'nanoid';
 import Confetti from 'react-confetti';
 import './App.css';
 import Die from './Components/Die';
+import Victory from './assets/brass.mp3';
 
 function App() {
   const randomNumber = (range) => Math.ceil(Math.random() * range);
   const buttonRef = useRef(null);
   const numberOfDice = 10;
   const [dice, setDice] = useState(() => generateAllNewDice());
-  const tenzies = dice.every(
-    (die) => die.isHeld && die.value === dice[0].value
-  );
+  const tenzies = dice.every((die) => die.isHeld && die.value === dice[0].value);
 
   useEffect(() => {
     if (tenzies) {
       buttonRef.current.focus();
+      victory.volume = 0.5;
+      victory.play();
     }
   }, [tenzies]);
 
@@ -31,44 +32,33 @@ function App() {
     if (tenzies) {
       setDice(generateAllNewDice);
     } else {
-      setDice((prevDice) =>
-        prevDice.map((die) =>
-          die.isHeld ? die : { ...die, value: randomNumber(6) }
-        )
-      );
+      setDice((prevDice) => prevDice.map((die) => (die.isHeld ? die : { ...die, value: randomNumber(6) })));
     }
   }
 
   function holdDie(holdId) {
-    setDice((prevDice) =>
-      prevDice.map((die) =>
-        die.id === holdId ? { ...die, isHeld: !die.isHeld } : die
-      )
-    );
+    setDice((prevDice) => prevDice.map((die) => (die.id === holdId ? { ...die, isHeld: !die.isHeld } : die)));
   }
 
-  const dieElements = dice.map((die) => (
-    <Die key={die.id} die={die} holdDie={holdDie} />
-  ));
+  const dieElements = dice.map((die) => <Die key={die.id} die={die} holdDie={holdDie} />);
+
+  const victory = new Audio(Victory);
 
   return (
     <>
       <main>
-        {tenzies && <Confetti />}
-        <div aria-live="polite" className="sr-only">
-          {tenzies ? (
-            <p>
-              Congratulations: You have won! Press "New Game" to start again.
-            </p>
-          ) : null}
+        {tenzies && (
+          <Confetti recycle={false} numberOfPieces={3000} shapes={['square', 'circle', 'triangle', 'star']} />
+        )}
+        <div aria-live='polite' className='sr-only'>
+          {tenzies ? <p>Congratulations: You have won! Press "New Game" to start again.</p> : null}
         </div>
-        <h1 className="title">Tenzies</h1>
-        <p className="instructions">
-          Roll until all dice are the same. Click each die to freeze it at its
-          current value between rolls.
+        <h1 className='title'>Tenzies</h1>
+        <p className='instructions'>
+          Roll until all dice are the same. Click each die to freeze it at its current value between rolls.
         </p>
-        <div className="dice-container">{dieElements}</div>
-        <button ref={buttonRef} className="roll-dice" onClick={rollDice}>
+        <div className='dice-container'>{dieElements}</div>
+        <button ref={buttonRef} className='roll-dice' onClick={rollDice}>
           {tenzies ? 'New Game' : 'Roll'}
         </button>
       </main>

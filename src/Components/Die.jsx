@@ -1,4 +1,4 @@
-import React from 'react';
+import Pips from './Pips';
 
 const Die = (props) => {
   return (
@@ -8,7 +8,7 @@ const Die = (props) => {
       aria-pressed={props.die.isHeld}
       aria-label={'Die with value ' + props.die.value}
     >
-      {props.die.value}
+      <Pips value={props.die.value} />
     </button>
   );
 };
