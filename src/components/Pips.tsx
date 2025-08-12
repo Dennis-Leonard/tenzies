@@ -1,34 +1,37 @@
 import React from 'react';
+import { PipsProps } from '../models/pips-props';
+import { PipsData } from '../models/pips-data';
+import { PipValues } from '../models/enums/pip-values.enum';
 
-const Pips = ({ value }) => {
-  const pipData = () => {
+const Pips: React.FC<PipsProps> = ({ value }) => {
+  const pipData = (): PipsData => {
     switch (value) {
-      case 1:
+      case PipValues.ONE:
         return {
           color: 'red',
           layout: [false, false, false, false, true, false, false, false, false],
         };
-      case 2:
+      case PipValues.TWO:
         return {
           color: 'yellow',
           layout: [false, false, true, false, false, false, true, false, false],
         };
-      case 3:
+      case PipValues.THREE:
         return {
           color: 'orange',
           layout: [false, false, true, false, true, false, true, false, false],
         };
-      case 4:
+      case PipValues.FOUR:
         return {
           color: 'green',
           layout: [true, false, true, false, false, false, true, false, true],
         };
-      case 5:
+      case PipValues.FIVE:
         return {
           color: 'blue',
           layout: [true, false, true, false, true, false, true, false, true],
         };
-      case 6:
+      case PipValues.SIX:
         return {
           color: 'purple',
           layout: [true, false, true, true, false, true, true, false, true],
@@ -39,9 +42,7 @@ const Pips = ({ value }) => {
   const pips = pipData();
 
   const pipElements = pips.layout.map((pip, index) => {
-    return (
-      <span className={pip ? 'circle' : null} style={pip ? { backgroundColor: pips.color } : null} key={index}></span>
-    );
+    return <span className={pip ? 'circle' : ''} style={pip ? { backgroundColor: pips.color } : {}} key={index}></span>;
   });
   return <div className='pips'>{pipElements}</div>;
 };

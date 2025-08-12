@@ -2,33 +2,36 @@ import { useEffect, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
 import Confetti from 'react-confetti';
 import './App.css';
-import Die from './Components/Die';
+import Die from './components/Die';
 import Victory from './assets/brass.mp3';
+import { DieState } from './models/die-state';
 
 function App() {
-  const randomNumber = (range) => Math.ceil(Math.random() * range);
-  const buttonRef = useRef(null);
-  const numberOfDice = 10;
-  const [dice, setDice] = useState(() => generateAllNewDice());
-  const tenzies = dice.every((die) => die.isHeld && die.value === dice[0].value);
+  const randomNumber = (range: number) => Math.ceil(Math.random() * range);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const numberOfDice: number = 10;
+  const [dice, setDice] = useState<DieState[]>(() => generateAllNewDice());
+  const tenzies: boolean = dice.every((die) => die.isHeld && die.value === dice[0].value);
 
   useEffect(() => {
     if (tenzies) {
-      buttonRef.current.focus();
-      victory.volume = 0.5;
-      victory.play();
+      if (buttonRef.current) {
+        buttonRef.current.focus();
+        victory.volume = 0.5;
+        victory.play();
+      }
     }
   }, [tenzies]);
 
-  function generateAllNewDice() {
-    return new Array(numberOfDice).fill().map(() => {
+  function generateAllNewDice(): DieState[] {
+    return new Array(numberOfDice).fill(10).map(() => {
       const value = randomNumber(6);
 
       return { value, isHeld: false, id: nanoid() };
     });
   }
 
-  function rollDice() {
+  function rollDice(): void {
     if (tenzies) {
       setDice(generateAllNewDice);
     } else {
@@ -36,7 +39,7 @@ function App() {
     }
   }
 
-  function holdDie(holdId) {
+  function holdDie(holdId: string): void {
     setDice((prevDice) => prevDice.map((die) => (die.id === holdId ? { ...die, isHeld: !die.isHeld } : die)));
   }
 
@@ -47,9 +50,7 @@ function App() {
   return (
     <>
       <main>
-        {tenzies && (
-          <Confetti recycle={false} numberOfPieces={3000} shapes={['square', 'circle', 'triangle', 'star']} />
-        )}
+        {tenzies && <Confetti recycle={false} numberOfPieces={3000} />}
         <div aria-live='polite' className='sr-only'>
           {tenzies ? <p>Congratulations: You have won! Press "New Game" to start again.</p> : null}
         </div>
